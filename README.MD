@@ -6,8 +6,8 @@ the PodMonitoring object.
 
 ### Getting Started
 This repository include the following folders
-- gmp - Kubernetes deployment script
-- src - Python Flask sample application to customize metrics
+- [gmp](gmp) - Kubernetes deployment script
+- [src](src) - Python Flask sample application to customize metrics
 
 To test the scripts, you may follow the following steps
 1. Launch a GKE cluster with managed Prometheus (Refer to GKE Cluster Creation Section)
