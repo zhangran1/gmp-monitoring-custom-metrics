@@ -31,8 +31,8 @@ number_of_requests = Counter(
     'The number of requests, its a counter so the value can increase or reset to zero.'
 )
 
-current_cpu_usage = Gauge(
-    'current_pod_cpu_usage',
+hsi_cpu_usage = Gauge(
+    'hsi_cpu_usage',
     'The current value of cpu usage, its a gauge so it can go up or down.',
     ['server_name']
 )
@@ -48,7 +48,7 @@ PYTHON_LATENCIES_HISTOGRAM = Histogram(
 def get_data():
     """Returns all data as plaintext."""
     number_of_requests.inc()
-    current_cpu_usage.labels('cpu_usage_sample').set(int(psutil.cpu_percent() * 10))
+    hsi_cpu_usage.labels('hsi_cpu_usage').set(int(psutil.cpu_percent() * 10))
     return generate_latest(REGISTRY), 200
 
 

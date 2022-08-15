@@ -29,7 +29,7 @@ spec:
         app: flask-example
     spec:
       containers:
-      - image: gcr.io/exploration-351204/flask-demo:0.10
+      - image: gcr.io/PROJECT_ID/flask-demo:0.1
         name: flask-example
         ports:
         - name: metrics
