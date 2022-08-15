@@ -1,16 +1,28 @@
-#### Quick Start
+### Google Cloud Managed Service for Prometheus (GMP) with custom metrics
 
-gmp folder: kubernetes deployment script
+This repository contains sample application and PodMonitoring configuration to be used with (GMP). The sample application 
+exports custom metrics and expose via metrics endpoints. Prometheus PodMonitoring Scrape interval could be adjusted in 
+the PodMonitoring object.
 
-src folder: python sample application to customize metrics
+### Getting Started
+This repository include the following folders
+- gmp - Kubernetes deployment script
+- src - Python Flask sample application to customize metrics
 
+To test the scripts, you may follow the following steps
+1. Launch a GKE cluster with managed Prometheus (Refer to GKE Cluster Creation Section)
+2. Containerize Python Flask sample application and deploy to GRC (Refer to App Building Section)
+3. Deploy `PodMonitoring` resource (Refer to PodMonitoring Resource Section)
 
-Create cluster
+### GKE Cluster creation
+
 ```shell
 gcloud beta container clusters create gmp-cluster --num-nodes=3 --zone asia-southeast1-a --enable-managed-prometheus
 ```
 
+
 Create Name Space
+
 ```shell
 kubectl create ns gmp-test
 ```
@@ -21,6 +33,46 @@ Load test
 ```shell
 kubectl -n gmp-test run -i --tty load-generator --rm --image=busybox:1.28 --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://flask-sample; done"
 ```
+
+### App Building
+
+Replace PROJECT_ID to your own project ID.
+
+Build Docker Container
+```shell
+docker build -t flask-demo:0.1 .
+```
+
+Tag Docker container
+```shell
+docker tag flask-demo:0.10 gcr.io/PROJECT_ID/flask-demo:0.1
+```
+
+Push docker container to GCR under your project
+```shell
+docker push gcr.io/PROJECT_ID/flask-demo:0.1
+```
+
+### PodMonitoring Resource Section
+
+Deploy flask demo app and deploy PodMonitoring
+```shell
+kubectl -n gmp-test apply -f flask-demo.yaml
+kubectl -n gmp-test apply -f flask-monitoring.yaml
+```
+
+To troubleshoot the pod locally
+```shell
+kubectl port-forward flask-example-78d9c48c87-f2p9d 8080 -n gmp-test
+```
+
+To delete the pod and Pod monitoring
+```shell
+kubectl -n gmp-test delete -f flask-demo.yaml
+
+kubectl -n gmp-test delete -f flask-monitoring.yaml
+```
+
 
 References
 
